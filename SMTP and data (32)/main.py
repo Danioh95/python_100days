@@ -1,5 +1,3 @@
-# pass provaprovone  yahoo provaprovone222@yahoo.com Carione2
-
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -37,7 +35,7 @@ if index != "a":
 
 # The mail addresses and password
 sender_address = 'provaprovone222@hotmail.com'
-sender_pass = 'Provaprovone'
+sender_pass = ''
 
 # Setup the MIME
 message = MIMEMultipart("alternative")
