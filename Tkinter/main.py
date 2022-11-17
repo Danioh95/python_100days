@@ -1,104 +1,79 @@
 from tkinter import *
+from tkinter import messagebox
+from random import choice, randint, shuffle
+import pyperclip
 
-def button_clicked():
-    print("I got clicked")
-    new_text = input.get()
-    my_label.config(text=new_text)
+# ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
-#Creating a new window and configurations
+#Password Generator Project
+def generate_password():
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
+
+    password_letters = [choice(letters) for _ in range(randint(8, 10))]
+    password_symbols = [choice(symbols) for _ in range(randint(2, 4))]
+    password_numbers = [choice(numbers) for _ in range(randint(2, 4))]
+
+    password_list = password_letters + password_symbols + password_numbers
+    shuffle(password_list)
+
+    password = "".join(password_list)
+    password_entry.insert(0, password)
+    pyperclip.copy(password)
+
+# ---------------------------- SAVE PASSWORD ------------------------------- #
+def save():
+
+    website = website_entry.get()
+    email = email_entry.get()
+    password = password_entry.get()
+
+    if len(website) == 0 or len(password) == 0:
+        messagebox.showinfo(title="Oops", message="Please make sure you haven't left any fields empty.")
+    else:
+        is_ok = messagebox.askokcancel(title=website, message=f"These are the details entered: \nEmail: {email} "
+                                                      f"\nPassword: {password} \nIs it ok to save?")
+        if is_ok:
+            with open("data.txt", "a") as data_file:
+                data_file.write(f"{website} | {email} | {password}\n")
+                website_entry.delete(0, END)
+                password_entry.delete(0, END)
+
+
+# ---------------------------- UI SETUP ------------------------------- #
+
 window = Tk()
-window.title("Widget Examples")
-window.minsize(width=100, height=50)
-window.config(padx=100, pady=100)
+window.title("Password Manager")
+window.config(padx=50, pady=50)
+
+canvas = Canvas(height=200, width=200)
+logo_img = PhotoImage(file="logo.png")
+canvas.create_image(100, 100, image=logo_img)
+canvas.grid(row=0, column=1)
 
 #Labels
-label = Label(text="Miles")
-label.grid(column=3, row=1)
-
-label = Label(text="Km")
-label.grid(column=3, row=2)
-
-label = Label(text="is equal to")
-label.grid(column=1, row=2)
-aria = StringVar()
-#Buttons
-def action():
-    aria.set(int(entry.get()) * 1.6)
-
-#calls action() when pressed
-button = Button(text="Calculate", command=action)
-button.grid(column=2, row=3)
-#calls action() when pressed
-# button = Button(text="Click Me", command=action)
-# button.grid(column=2, row=2)
+website_label = Label(text="Website:")
+website_label.grid(row=1, column=0)
+email_label = Label(text="Email/Username:")
+email_label.grid(row=2, column=0)
+password_label = Label(text="Password:")
+password_label.grid(row=3, column=0)
 
 #Entries
-entry = Entry(width=10)
-#Add some text to begin with
-entry.insert(END, string="0")
-#Gets text in entry
-print(entry.get())
-entry.grid(column=2, row=1)
+website_entry = Entry(width=35)
+website_entry.grid(row=1, column=1, columnspan=2)
+website_entry.focus()
+email_entry = Entry(width=35)
+email_entry.grid(row=2, column=1, columnspan=2)
+email_entry.insert(0, "angela@gmail.com")
+password_entry = Entry(width=21)
+password_entry.grid(row=3, column=1)
 
-label = Label(textvariable=aria)
-label.grid(column=2, row=2)
-#
-# #Text
-# text = Text(height=5, width=30)
-# #Puts cursor in textbox.
-# text.focus()
-# #Adds some text to begin with.
-# text.insert(END, "Example of multi-line text entry.")
-# #Get's current value in textbox at line 1, character 0
-# print(text.get("1.0", END))
-# text.grid()
-#
-# #Spinbox
-# def spinbox_used():
-#     #gets the current value in spinbox.
-#     print(spinbox.get())
-# spinbox = Spinbox(from_=0, to=10, width=5, command=spinbox_used)
-# spinbox.grid()
-#
-# #Scale
-# #Called with current scale value.
-# def scale_used(value):
-#     print(value)
-# scale = Scale(from_=0, to=100, command=scale_used)
-# scale.grid()
-#
-# #Checkbutton
-# def checkbutton_used():
-#     #Prints 1 if On button checked, otherwise 0.
-#     print(checked_state.get())
-# #variable to hold on to checked state, 0 is off, 1 is on.
-# checked_state = IntVar()
-# checkbutton = Checkbutton(text="Is On?", variable=checked_state, command=checkbutton_used)
-# checked_state.get()
-# checkbutton.grid()
-#
-# #Radiobutton
-# def radio_used():
-#     print(radio_state.get())
-# #Variable to hold on to which radio button value is checked.
-# radio_state = IntVar()
-# radiobutton1 = Radiobutton(text="Option1", value=1, variable=radio_state, command=radio_used)
-# radiobutton2 = Radiobutton(text="Option2", value=2, variable=radio_state, command=radio_used)
-# radiobutton1.grid()
-# radiobutton2.grid()
-#
-#
-# #Listbox
-# def listbox_used(event):
-#     # Gets current selection from listbox
-#     print(listbox.get(listbox.curselection()))
-#
-# listbox = Listbox(height=4)
-# fruits = ["Apple", "Pear", "Orange", "Banana"]
-# for item in fruits:
-#     listbox.insert(fruits.index(item), item)
-# listbox.bind("<<ListboxSelect>>", listbox_used)
-# listbox.grid()
+# Buttons
+generate_password_button = Button(text="Generate Password", command=generate_password)
+generate_password_button.grid(row=3, column=2)
+add_button = Button(text="Add", width=36, command=save)
+add_button.grid(row=4, column=1, columnspan=2)
 
 window.mainloop()
-
